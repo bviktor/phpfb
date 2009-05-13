@@ -1,0 +1,145 @@
+
+//////////////////////
+UNDONE:
+//////////////////////
+
+- Reload page after upload.
+
+- Rewrite 'messaging system'.
+
+//////////////////////
+DONE:
+//////////////////////
+
+- Fix open_basedir restriction errors on certain hosts.
+(1.0.1)
+
+- Insert returning messages into popup warnings.
+(1.0.0)
+
+- Supply missing quotation marks (HTML).
+(1.0.0)
+
+- Uploader is also valid HTML now.
+(1.0.0)
+
+- Overwrite protection added to uploader.
+(1.0.0)
+
+- Icon alternative text replaced.
+(1.0.0)
+
+- Uploader revised. Changes include php file upload as phps.
+(1.0.0)
+
+- Uploader: file ext check works correctly both with up and
+lowcase files.
+(1.0.0)
+
+- Uploader: file extension check instead of file type check.
+(1.0.0)
+
+- @HEADER files now can contain more lines and HTML tags.
+(1.0.0)
+
+- Files starting with '.' (UNIX hidden files) are hidden now.
+(1.0.0)
+
+- phpFB hid all files containing @, fixed.
+(1.0.0)
+
+- Fix problem about trying to get filemtime of '..'
+(1.0.0)
+
+- Define max upload size per folder by @UPLOAD.
+(0.9.9)
+
+- Rename files longer than 50 characters.
+(0.9.9)
+
+- Solve problem with empty files.
+(0.9.8)
+
+- Fix trim problems.
+(0.9.8)
+
+- Make phpFB valid HTML 4.01 (except with uploader).
+(0.9.8)
+
+- Display 'file last modified' info.
+(0.9.8)
+
+- Replace global switches of gallery/upload with file checks.
+(0.9.7)
+
+- Introducing private folders.
+(0.9.6)
+
+- Introducing header function.
+(0.9.6)
+
+- "chroot" to dir only if it's the own dir.
+(0.9.5)
+
+- Fix problem with spaces in filenames.
+(0.9.5)
+
+- Uploader recovered.
+(0.9.5)
+
+- Problem with phpFB placed in docroot fixed.
+(0.9.5)
+
+- Unify lister and gallery script.
+(0.9.4)
+
+- Gallery extension recovered.
+(0.9.4)
+
+- New option to set cell width containing filenames.
+(0.9.3)
+
+- Some cleanup.
+(0.9.3)
+
+- Removal of some unused variables.
+(0.9.3)
+
+- Rewrite of file checks in a tidier and simpler form.
+(0.9.3)
+
+- Ban of php uploads.
+(0.9.2)
+
+- Chroot-like stuff.
+(0.9.2)
+
+- Recover most of the functionality that were available in the 
+per-folder version.
+(0.9.2)
+
+- Huge changes, phpFB is one simple file instead of one file 
+per folder.
+(0.9.1)
+
+//////////////////////
+REMOVED/SUBSTITUTED:
+//////////////////////
+
+- Associate file icons by MIME type
+http://hu2.php.net/manual/hu/function.mime-content-type.php
+Reason: the required function is disabled on most hosts.
+Only 3 type remains: folders, image files, other files.
+
+- Display size not only of files but of folders, too
+Reason: script execution time would probably get very high
+especially when there were many folders, and also would 
+probably cause high CPU/HDD load on the host.
+
+- Check for uname
+Reason: this would be needed for win hosts. But I realized that
+I don't care about win :-). So if you need phpFB on win, you'll
+have to fix it yourself, sorry.
+
+- Make gallery look better.
+Reason: I can't imagine a better scheme :-).

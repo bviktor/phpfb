@@ -1,0 +1,164 @@
+##################################################################
+CREDITS
+##################################################################
+
+phpFB is a simple and easy to use PHP script which lists the content
+of web folders. It is designed to look similar to common web servers.
+Easily customizable and tweakable.
+
+Copyright (C) 2006, Berke Viktor
+
+##################################################################
+THINGS YOU NEED TO KNOW
+##################################################################
+
+First of all: the way phpFB reports things is currently being
+revised, so don't be surpised about arrays with one element etc :-)
+
+------------------------------------------------------------------
+
+The script itself is pretty simple IMHO, you can tweak it to your
+needs, but I placed some of the important settings in the 
+beginning of the script to make your life easier (see "OPTIONS").
+
+------------------------------------------------------------------
+
+To 'install' phpFB, you have nothing else to do but place it in a
+folder which you want to show off to the public.
+
+------------------------------------------------------------------
+
+You shouldn't have folders with ".." in their names. For example:
+
+PHP is...fun
+
+You probably don't want such folders, but it's just better to make
+clear. If you asked why, I would say this is needed to disable 
+moving out the "root" directory (the directory which phpFB is 
+placed in).
+
+------------------------------------------------------------------
+
+File uploads need a temporary directory. You can modify this only
+if you have access to the host's config files. Hopefully you don't
+have to care about this, but if uploads don't work for you, it's
+your task to find out what's this dir. You might query it by
+running phpinfo(), but it could be disabled on some hosts.
+
+------------------------------------------------------------------
+
+You can specify upload sizelimit in two ways. The first one is 
+$up_size in phpFB's options section. The second one is to specify
+it in @UPLOAD in bytes. This overrides the default value only to
+its folder. Warning! If the file contains only spaces, you'll have
+0 MB sizelimit in that folder. An example @UPLOAD could contain:
+
+1024
+
+Which sets sizelimit to 1 kB.
+
+------------------------------------------------------------------
+
+If the length of a file's name is more than 50 characters, it's
+ending will be chunked till the 47th character, and "..." will be
+placed in the end of it. Note that this applies to listing only,
+no file names will be altered.
+
+------------------------------------------------------------------
+
+I setted up cells in the table to look acceptable both in Firefox
+and Epiphany on Linux. If you have problems with viewing, please
+let me know.
+
+------------------------------------------------------------------
+
+If you want your file to be hidden, start it with @. You could use
+a point (.) too, but this is not recommended, it can cause problems,
+especially on free web spaces.
+
+------------------------------------------------------------------
+
+Files ending to .mp3, .wma are not uploadable by default. It could
+be disabled easily, look for "mp3" or "wma" and you'll see ;-).
+
+------------------------------------------------------------------
+
+PHP files are uploadable, but they will be renamed to .phps to
+avoid hacks.
+
+------------------------------------------------------------------
+
+The uploader is not allowed to overwrite existing files. If you
+want to upload something which has the same name, you have to
+rename it.
+
+##################################################################
+IMPORTANT FILES THAT MODIFY FUNCTIONALIY
+##################################################################
+
+There are files which you can use to control the behaviour of the
+script in each folder. Besides @HEADER they could be empty files.
+(Actually @HEADER could be empty, too, but the use of would be
+quite nonsense then.)
+
+------------------------------------------------------------------
+
+@VIEWER
+
+Place a file called @VIEWER into the folder which you want to 
+enable viewer in.
+
+------------------------------------------------------------------
+
+@HEADER
+
+Place a file called @HEADER into the folder you want to have a note
+displayed in top of it. It can contain more lines and HTML tags, too.
+
+------------------------------------------------------------------
+
+@PRIVATE
+
+Place a file called @PRIVATE into the folder you want to hide from
+visitors. Warning, this is not recursive, it applies to that single
+folder only, subfolders are not affected.
+
+------------------------------------------------------------------
+
+@UPLOAD
+
+Place a file called @UPLOAD into the folder which you want to
+enable uploads in. This file can also be used to specify custom
+sizelimits in any folder. This function was mentioned previously.
+
+##################################################################
+OPTIONS
+##################################################################
+
+$gfxdir = '@gfx';
+
+This folder contains the necessairy icons which are required to
+display the content properly. Enter the URL or path of your gfx
+folder without ending slash. Both kind is accepted, examples:
+
+$gfxdir = 'pub/files/gfx_dir';
+$gfxdir = 'http://example.com/gfx';
+
+------------------------------------------------------------------
+
+$up_size = '2097152';
+
+Here you can specify the maximum size of files (in bytes) that
+one can upload using the uploader.
+
+------------------------------------------------------------------
+
+$chmod_enabled = '1';
+
+This must be enabled to grant access to files uploaded via 
+phpFB since some hosts don't provide access to them by default. 
+If you know that this is needless on your host or the chmod()
+function is disabled, comment it out with // or change "1" to 
+anything you like.
+
+##################################################################
