@@ -103,7 +103,8 @@ if ($_GET[view] == 1)
 	}
 
 	/* output the result */
-	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc"><div>
+	echo '<head><meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+	<title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc"><div>
 	<img alt="back" src="'.$gfxdir.'/back.png" border="0" /><a href="lister.php?dir='.$pic_back.'">Back</a><br /><br />
 	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br />
 	<b>Filesize: </b>'.$size_str.'<br />
