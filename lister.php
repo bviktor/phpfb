@@ -288,7 +288,7 @@ else
 }
 
 /* start of footer */
-echo '</div><address>phpFB '.$phpfb_ver.'</address></body></html>';
+echo '</div><address>phpFB '.$phpfb_ver.' (<a href="http://validator.w3.org/check?uri=referer">validator</a>)</address></body></html>';
 
 if ($message)
 {
