@@ -72,7 +72,7 @@ if (file_exists($dir1.'@HEADER'))
 /* if folder is set to private, return to parent folder */
 if (file_exists($dir1.'@PRIVATE') or strpos($dir1, '..') > -1)
 {
-	echo '<head><meta http-equiv="refresh" content="0,url=lister.php?priv=1&dir='.$back3.'/"></head></html>';
+	echo '<head><meta http-equiv="refresh" content="0,url=lister.php?priv=1&dir='.$back3.'" /></head></html>';
 	die;
 }
 
@@ -92,14 +92,14 @@ if ($_GET[view] == 1)
 	$res_w = $reso[0];
 	$res_h = $reso[1];
 
-	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
-	<img alt="back" src="'.$gfxdir.'/back.png" border="0"><a href="lister.php?dir='.$pic_back.'">Back</a><p>
+	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc"><div>
+	<img alt="back" src="'.$gfxdir.'/back.png" border="0" /><a href="lister.php?dir='.$pic_back.'">Back</a><br />
 	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br />
 	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br />
 	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br />
-	<hr width="'.($reso[0]+2).'" align="left">
-	<img alt="image" src="'.$img2.'" width="'.$res_w.'" height="'.$res_h.'" border="1">
-	<hr width="'.($reso[0]+2).'" align="left">';
+	<hr width="'.($reso[0]+2).'" align="left" />
+	<img alt="image" src="'.$img2.'" width="'.$res_w.'" height="'.$res_h.'" border="1" />
+	<hr width="'.($reso[0]+2).'" align="left" />';
 } 
 //  <<<<<  VIEWER END  <<<<<
 
@@ -182,17 +182,17 @@ else
 			$val1 = substr($val1, 0, 47).'...';
 		}
 
-		$file_list .= '<table border=0 cellspacing=0 cellpadding=0><tr>
-			<td width=500><tt><img alt="'.$f_alt.'" src="'.$gfxdir.'/'.$f_icon.'"> <a href="'.$f_link.'">'.$val1.'</a></tt></td>
-			<td width=180 align=right><tt>'.$f_date.'</tt></td>
-			<td width=110 align=right><tt>'.$f_size.'</tt></td>
+		$file_list .= '<table border="0" cellspacing="0" cellpadding="0"><tr>
+			<td width="500"><tt><img alt="'.$f_alt.'" src="'.$gfxdir.'/'.$f_icon.'" /> <a href="'.$f_link.'">'.$val1.'</a></tt></td>
+			<td width="180" align="right"><tt>'.$f_date.'</tt></td>
+			<td width="110" align="right"><tt>'.$f_size.'</tt></td>
 			</tr></table>';
 	}
 
 	echo '<head><title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
 		<h1>Index of <a href="lister.php?dir='.$dir2.'" style="text-decoration: none;"><font color="#000000">/'.$dir1.'</font></a></h1>
-		<table border="0" cellspacing="0" cellpadding="0"><tr>
-		<td width="500"><tt><img alt="spacer" src="'.$gfxdir.'/blank.png"> Name</tt></td>
+		<div><table border="0" cellspacing="0" cellpadding="0"><tr>
+		<td width="500"><tt><img alt="spacer" src="'.$gfxdir.'/blank.png" /> Name</tt></td>
 		<td width="180" align="right"><tt>Last Modified</tt></td>
 		<td width="110" align="right"><tt>Size</tt></td>
 		</tr></table><hr />';
@@ -260,10 +260,10 @@ else
 			$message = do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled);
 		}
 
-		echo '<form name="upload" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="">
+		echo '<form name="upload" enctype="multipart/form-data" method="post" action="">
 			<span class="textm">Uploader ('.number_format($up_size/1048576, 2, ',', ' ').' MB): </span>
-			<input type="file" id="userfile" name="userfile">
-			<input type="submit" name="upload" value="Upload"></form><hr>';
+			<input type="file" id="userfile" name="userfile" />
+			<input type="submit" name="upload" value="Upload" /></form><hr />';
 
 	}
 //  <<<<<  UPLOADER END  <<<<<
@@ -272,7 +272,7 @@ else
 //  <<<<< LISTER & UPLOADER END  <<<<<
 
 //  >>>>>  FOOTER  >>>>>
-echo '<address>phpFB '.$phpfb_ver.'</address></body></html>';
+echo '</div><address>phpFB '.$phpfb_ver.'</address></body></html>';
 
 if ($message)
 {
