@@ -174,10 +174,11 @@ else
 			$f_link = 'lister.php?dir='.$back3.'/';
 			$val1 = 'Parent Directory';
 			$f_icon = 'back.png'; 
-			$f_date =''; $f_size = '-';
+			$f_date ='';
+			$f_size = '-';
 		}
 
-		if ((strlen($val1))>50)
+		if ((strlen($val1)) > 50)
 		{
 			$val1 = substr($val1, 0, 47).'...';
 		}
