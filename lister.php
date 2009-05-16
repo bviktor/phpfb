@@ -45,7 +45,7 @@ $messages = array(
 );
 
 /* set doctype of output */
-echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">';
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">';
 
 $dir2 = str_replace(" ", "%20", $dir1);
 
@@ -90,11 +90,23 @@ if ($_GET[view] == 1)
 	$reso = getimagesize($img1);
 	$res_w = $reso[0];
 	$res_h = $reso[1];
+	
+	/* some grammar */
+	$size_str = (string)number_format(filesize($img1)/1024, 0);
+	if ($size_str > 1)
+	{
+		$size_str = $size_str." kBytes";
+	}
+	else
+	{
+		$size_str = $size_str." kByte";
+	}
 
+	/* output the result */
 	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc"><div>
-	<img alt="back" src="'.$gfxdir.'/back.png" border="0" /><a href="lister.php?dir='.$pic_back.'">Back</a><br />
+	<img alt="back" src="'.$gfxdir.'/back.png" border="0" /><a href="lister.php?dir='.$pic_back.'">Back</a><br /><br />
 	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br />
-	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br />
+	<b>Filesize: </b>'.$size_str.'<br />
 	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br />
 	<hr width="'.($reso[0] + 2).'" align="left" />
 	<img alt="image" src="'.$img2.'" width="'.$res_w.'" height="'.$res_h.'" border="1" />
