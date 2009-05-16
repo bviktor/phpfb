@@ -5,7 +5,7 @@
    folders. It is designed to look similar to common web servers. Easily 
    customizable and tweakable.
 
-   Copyright (c) 2006, Berke Viktor
+   Copyright (c) 2006-2009, Berke Viktor
    All rights reserved.
    
    Redistribution and use in source and binary forms, with or without
@@ -44,8 +44,8 @@ $wdir = getcwd();
 
 $dir1 = ltrim($_GET[dir], "/");
 
-$msg = array(
-"You are not allowed to browse the selected directory.",
+$messages = array(
+	"perm_error" => "You are not allowed to browse the selected directory."
 );
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>';
@@ -55,134 +55,213 @@ $dir2 = str_replace(" ", "%20", $dir1);
 $back1 = explode("/", $dir1);
 $i = 0;
 $back2 = ((count($back1))-2);
-while ($back2 > $i) { $back3 = $back3.'/'.$back1[$i]; $i++; };
 
-if (file_exists($dir1.'@HEADER')) { $header = file_get_contents($dir1.'@HEADER'); }
-if (file_exists($dir1.'@PRIVATE') or strpos($dir1, '..') > -1) { echo '<head><meta http-equiv="refresh" content="0,url=lister.php?priv=1&dir='.$back3.'/"></head></html>'; die; }
+while ($back2 > $i)
+{
+	$back3 = $back3.'/'.$back1[$i];
+	$i++;
+}
 
-if ($_GET[priv] == 1) { $message = $msg[0];}
+if (file_exists($dir1.'@HEADER'))
+{
+	$header = file_get_contents($dir1.'@HEADER');
+}
+if (file_exists($dir1.'@PRIVATE') or strpos($dir1, '..') > -1)
+{
+	echo '<head><meta http-equiv="refresh" content="0,url=lister.php?priv=1&dir='.$back3.'/"></head></html>';
+	die;
+}
+
+if ($_GET[priv] == 1) { $message = $messages["perm_error"];}
 //  <<<<<  MISC END  <<<<<
 
 //  >>>>>  VIEWER  >>>>>
-if ($_GET[view] == 1) {
+if ($_GET[view] == 1)
+{
+	$img1 = $_GET[fn];
+	$img2 = str_replace(" ", "%20", $img1);
+	$pic = explode("/", $img2);
+	$picname2 = $pic[(count($pic))-1];
+	$picname1 = str_replace("%20", " ", $picname2);
+	$pic_back = rtrim($img2, "$picname2");
+	$reso = getimagesize($img1);
+	$res_w = $reso[0];
+	$res_h = $reso[1];
 
-$img1 = $_GET[fn];
-$img2 = str_replace(" ", "%20", $img1);
-$pic = explode("/", $img2);
-$picname2 = $pic[(count($pic))-1];
-$picname1 = str_replace("%20", " ", $picname2);
-$pic_back = rtrim($img2, "$picname2");
-$reso = getimagesize($img1);
-$res_w = $reso[0];
-$res_h = $reso[1];
-
-echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
-<img alt="back" src="'.$gfxdir.'/back.png" border=0><a href="lister.php?dir='.$pic_back.'">Back</a><p>
-<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br>
-<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br>
-<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br>
-<hr width='.($reso[0]+2).' align=left>
-<img alt="image" src="'.$img2.'" width='.$res_w.' height='.$res_h.' border=1>
-<hr width='.($reso[0]+2).' align=left>';
-
+	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
+	<img alt="back" src="'.$gfxdir.'/back.png" border=0><a href="lister.php?dir='.$pic_back.'">Back</a><p>
+	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br>
+	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br>
+	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br>
+	<hr width='.($reso[0]+2).' align=left>
+	<img alt="image" src="'.$img2.'" width='.$res_w.' height='.$res_h.' border=1>
+	<hr width='.($reso[0]+2).' align=left>';
 } 
 //  <<<<<  VIEWER END  <<<<<
 
 //  >>>>>  LISTER & UPLOADER  >>>>>
-else {
-
-//  >>>>>  LISTER  >>>>>
-$the_array = Array();
-$handle = opendir($wdir.'/'.$dir1);
-while (false !== ($file1 = readdir($handle))) 	{ $file2 = str_replace(" ", "%20", $file1);
-	if ($file2 != $dir1.'lister.php' && substr($file2, 0,1) != '@' && substr($file2, 0,1) != '.' xor substr($file2, 0,2) == '..') { $the_array[] = $file2; }
-							}
-
-closedir($handle);
-sort ($the_array);
-reset ($the_array);
-while (list ($key, $val2) = each ($the_array)) {
+else
+{
+	//  >>>>>  LISTER  >>>>>
+	$the_array = Array();
+	$handle = opendir($wdir.'/'.$dir1);
 	
-$val1 = str_replace("%20", " ", $val2);
-
-if ($val1 == '..' || is_file($dir1.$val1) == false) { $f_icon = 'folder.png'; $f_size = '-'; $f_link = 'lister.php?dir='.$dir2.$val2.'/'; $f_alt= '[DIR]'; }
-	else {
-		$f_size = number_format(filesize($dir1.$val1)/1024, 0, ',', ' ').' kB'; $f_alt= '[ . ]';
-		if ($f_size == 0) { $f_icon = 'unknown.png'; $f_link = $dir2.$val2; }
-		else {
-			$f_check = getimagesize($dir1.$val1);
-			if ( $f_check[2] == '' ) { $f_icon = 'unknown.png'; $f_link = $dir2.$val2; }
-			else { 	$f_icon = 'image.png'; 
-				if (file_exists($dir1.'@VIEWER')) { $f_link = 'lister.php?view=1&amp;fn='.$dir2.$val2; }
-				else { $f_link = $dir2.$val2; }
-			}
+	while (false !== ($file1 = readdir($handle)))
+	{
+		$file2 = str_replace(" ", "%20", $file1);
+		if ($file2 != $dir1.'lister.php' && substr($file2, 0,1) != '@' && substr($file2, 0,1) != '.' xor substr($file2, 0,2) == '..')
+		{
+			$the_array[] = $file2;
 		}
 	}
-if ($val1 != '..') { $f_date = date("d-m-Y H:i", filemtime($dir1.$val1)); }
 
-if ($val1 == '..') {	$f_link = 'lister.php?dir='.$back3.'/'; $val1 = 'Parent Directory'; $f_icon = 'back.png'; 
-			$f_date =''; $f_size = '';}
+	closedir($handle);
+	sort ($the_array);
+	reset ($the_array);
+	while (list ($key, $val2) = each ($the_array))
+	{
+		$val1 = str_replace("%20", " ", $val2);
 
-if ((strlen($val1))>50) { $val1 = substr($val1, 0, 47).'...'; }
+		if ($val1 == '..' || is_file($dir1.$val1) == false)
+		{
+			$f_icon = 'folder.png';
+			$f_size = '-'; $f_link = 'lister.php?dir='.$dir2.$val2.'/';
+			$f_alt= '[DIR]';
+		}
+		else
+		{
+			$f_size = number_format(filesize($dir1.$val1)/1024, 0, ',', ' ').' kB';
+			$f_alt= '[ . ]';
+			if ($f_size == 0)
+			{
+				$f_icon = 'unknown.png';
+				$f_link = $dir2.$val2;
+			}
+			else
+			{
+				$f_check = getimagesize($dir1.$val1);
+				if ( $f_check[2] == '' )
+				{
+					$f_icon = 'unknown.png';
+					$f_link = $dir2.$val2;
+				}
+				else
+				{
+					$f_icon = 'image.png'; 
+					if (file_exists($dir1.'@VIEWER'))
+					{
+						$f_link = 'lister.php?view=1&amp;fn='.$dir2.$val2;
+					}
+					else
+					{
+						$f_link = $dir2.$val2;
+					}
+				}
+			}
+		}
+		
+		if ($val1 != '..')
+		{
+			$f_date = date("d-m-Y H:i", filemtime($dir1.$val1));
+		}
 
-$file_list .= '
-	<table border=0 cellspacing=0 cellpadding=0><tr>
-	<td width=500><tt><img alt="'.$f_alt.'" src="'.$gfxdir.'/'.$f_icon.'"> <a href="'.$f_link.'">'.$val1.'</a></tt></td>
-	<td width=180 align=right><tt>'.$f_date.'</tt></td>
-	<td width=110 align=right><tt>'.$f_size.'</tt></td>
-	</tr></table>';
-}
+		if ($val1 == '..')
+		{
+			$f_link = 'lister.php?dir='.$back3.'/';
+			$val1 = 'Parent Directory';
+			$f_icon = 'back.png'; 
+			$f_date =''; $f_size = '-';
+		}
 
-echo	'<head><title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
-	<h1>Index of <a href="lister.php?dir='.$dir2.'" style="text-decoration: none;"><font color="#000000">/'.$dir1.'</font></a></h1>
-	<table border=0 cellspacing=0 cellpadding=0><tr>
-	<td width=500><tt><img alt="spacer" src="'.$gfxdir.'/blank.png"> Name</tt></td>
-	<td width=180 align=right><tt>Last Modified</tt></td>
-	<td width=110 align=right><tt>Size</tt></td>
-	</tr></table><hr>';
-if ($header) {echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=500><tt>'.$header.'</tt></td></tr></table><br>';}
-echo	$file_list.'<hr>';
+		if ((strlen($val1))>50)
+		{
+			$val1 = substr($val1, 0, 47).'...';
+		}
+
+		$file_list .= '<table border=0 cellspacing=0 cellpadding=0><tr>
+			<td width=500><tt><img alt="'.$f_alt.'" src="'.$gfxdir.'/'.$f_icon.'"> <a href="'.$f_link.'">'.$val1.'</a></tt></td>
+			<td width=180 align=right><tt>'.$f_date.'</tt></td>
+			<td width=110 align=right><tt>'.$f_size.'</tt></td>
+			</tr></table>';
+	}
+
+	echo '<head><title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
+		<h1>Index of <a href="lister.php?dir='.$dir2.'" style="text-decoration: none;"><font color="#000000">/'.$dir1.'</font></a></h1>
+		<table border=0 cellspacing=0 cellpadding=0><tr>
+		<td width=500><tt><img alt="spacer" src="'.$gfxdir.'/blank.png"> Name</tt></td>
+		<td width=180 align=right><tt>Last Modified</tt></td>
+		<td width=110 align=right><tt>Size</tt></td>
+		</tr></table><hr>';
+	if ($header)
+	{
+		echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=500><tt>'.$header.'</tt></td></tr></table><br>';
+	}
+	echo $file_list.'<hr>';
 //  <<<<<  LISTER END  <<<<<
 
 //  >>>>>  UPLOADER  >>>>>
-if (file_exists($dir1.'@UPLOAD')) {
+	if (file_exists($dir1.'@UPLOAD'))
+	{
+		$up_size2 = file_get_contents($dir1.'@UPLOAD');
+		if ($up_size2 != '') { $up_size = $up_size2; }
 
-$up_size2 = file_get_contents($dir1.'@UPLOAD');
-if ($up_size2 != '') { $up_size = $up_size2; }
+		$upload_dir = $wdir.'/'.$dir1;
+		$upload_url = 'http://'.$_SERVER['HTTP_HOST'].$dir1;
 
-$upload_dir = $wdir.'/'.$dir1;
-$upload_url = 'http://'.$_SERVER['HTTP_HOST'].$dir1;
+		function do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled)
+		{
+			$temp_name = $_FILES['userfile']['tmp_name'];
+			$file_name = $_FILES['userfile']['name']; 
+			$result    = $_FILES['userfile']['error'];
 
-function do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled) {
+			$file_name2 = explode('.', $file_name);
+			$file_ext = strtoupper($file_name2[(count($file_name2)-1)]);
 
- $temp_name = $_FILES['userfile']['tmp_name'];
- $file_name = $_FILES['userfile']['name']; 
- $result    = $_FILES['userfile']['error'];
+			if (file_exists($upload_dir.$file_name))
+			{
+				$message = 'The file already exists!';
+				return $message;
+			}
+			if ($_FILES['userfile']['size'] > $up_size)
+			{
+				$message = 'The file is too big!';
+				return $message;
+			}
+			if ($file_ext == 'MP3' or $file_ext == 'WMA')
+			{
+				$message = $file_ext.' upload is disabled.';
+				return $message;
+			}
 
-$file_name2 = explode('.', $file_name);
-$file_ext = strtoupper($file_name2[(count($file_name2)-1)]);
+			if ($chmod_enabled == '1')
+			{
+				chmod($temp_name, 0644);
+			}
 
-if (file_exists($upload_dir.$file_name)) { $message = 'The file already exists!'; return $message; }
-if ($_FILES['userfile']['size'] > $up_size) { $message = 'The file is too big!'; return $message; }
-if ($file_ext == 'MP3' or $file_ext == 'WMA') { $message = $file_ext.' upload is disabled.'; return $message; }
+			if ($file_ext == 'PHP')
+			{
+				$result = move_uploaded_file($temp_name, $upload_dir.$file_name.'s');
+			}
+			else
+			{
+				$result = move_uploaded_file($temp_name, $upload_dir.$file_name);
+			}
 
-if ($chmod_enabled == '1') { chmod($temp_name, 0644); }
+			$message = ($result)?'Success! Click on the folder name to see your file!' : 'Upload failed!';
+			return $message;
+		}
 
-if ($file_ext == 'PHP') { $result  =  move_uploaded_file($temp_name, $upload_dir.$file_name.'s'); }
-		else	{ $result  =  move_uploaded_file($temp_name, $upload_dir.$file_name); }
+		if ($_FILES['userfile'])
+		{
+			$message = do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled);
+		}
 
-$message = ($result)?'Success! Click on the folder name to see your file!' : 'Upload failed!';
-return $message;
-}
+		echo '<form name="upload" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="">
+			<span class="textm">Uploader ('.number_format($up_size/1048576, 2, ',', ' ').' MB): </span>
+			<input type="file" id="userfile" name="userfile">
+			<input type="submit" name="upload" value="Upload"></form><hr>';
 
-if ($_FILES['userfile']) { $message = do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled); }
-
-echo '	<form name="upload" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="">
-	<span class="textm">Uploader ('.number_format($up_size/1048576, 2, ',', ' ').' MB): </span>
-	<input type="file" id="userfile" name="userfile">
-	<input type="submit" name="upload" value="Upload"></form><hr>';
-
-}
+	}
 //  <<<<<  UPLOADER END  <<<<<
 
 }
@@ -191,6 +270,9 @@ echo '	<form name="upload" ENCTYPE="multipart/form-data" METHOD="POST" ACTION=""
 //  >>>>>  FOOTER  >>>>>
 echo '<address>phpFB '.$phpfb_ver.'</address></body></html>';
 
-if ($message) {echo '<script language="JavaScript">window.alert("'.$message.'");</script>';}
+if ($message)
+{
+	echo '<script language="JavaScript">window.alert("'.$message.'");</script>';
+}
 //  <<<<<  FOOTER END  <<<<<
 ?>
