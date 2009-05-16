@@ -1,9 +1,5 @@
 <?php
 /***************************************************************************
- 
-   phpFB is a simple and easy to use PHP script which lists the content of web
-   folders. It is designed to look similar to common web servers. Easily 
-   customizable and tweakable.
 
    Copyright (c) 2006-2009, Berke Viktor
    All rights reserved.
@@ -32,13 +28,13 @@
 
 ***************************************************************************/
 
-//  >>>>>  OPTIONS  >>>>>
+/* options */
 $gfxdir = '@gfx';
 $up_size = '2097152';
 $chmod_enabled = '1';
-//  <<<<<  OPTIONS END  <<<<<
+/* end of options */
 
-//  >>>>>  MISC  >>>>>
+/* bootstrap */
 $phpfb_ver = 'trunk';
 $wdir = getcwd();
 
@@ -54,9 +50,9 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.or
 $dir2 = str_replace(" ", "%20", $dir1);
 
 $back1 = explode("/", $dir1);
-$i = 0;
-$back2 = ((count($back1))-2);
+$back2 = ((count($back1)) - 2);
 
+$i = 0;
 while ($back2 > $i)
 {
 	$back3 = $back3.'/'.$back1[$i];
@@ -76,10 +72,13 @@ if (file_exists($dir1.'@PRIVATE') or strpos($dir1, '..') > -1)
 	die;
 }
 
-if ($_GET[priv] == 1) { $message = $messages["perm_error"];}
-//  <<<<<  MISC END  <<<<<
+if ($_GET[priv] == 1)
+{
+	$message = $messages["perm_error"];
+}
+/* end of bootstrap */
 
-//  >>>>>  VIEWER  >>>>>
+/* start of viewer */
 if ($_GET[view] == 1)
 {
 	$img1 = $_GET[fn];
@@ -97,13 +96,13 @@ if ($_GET[view] == 1)
 	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br />
 	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br />
 	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br />
-	<hr width="'.($reso[0]+2).'" align="left" />
+	<hr width="'.($reso[0] + 2).'" align="left" />
 	<img alt="image" src="'.$img2.'" width="'.$res_w.'" height="'.$res_h.'" border="1" />
-	<hr width="'.($reso[0]+2).'" align="left" />';
+	<hr width="'.($reso[0] + 2).'" align="left" />';
 } 
-//  <<<<<  VIEWER END  <<<<<
+/* end of viewer */
 
-//  >>>>>  LISTER & UPLOADER  >>>>>
+/* start of lister */
 else
 {
 	//  >>>>>  LISTER  >>>>>
@@ -129,7 +128,8 @@ else
 		if ($val1 == '..' || is_file($dir1.$val1) == false)
 		{
 			$f_icon = 'folder.png';
-			$f_size = '-'; $f_link = 'lister.php?dir='.$dir2.$val2.'/';
+			$f_size = '-';
+			$f_link = 'lister.php?dir='.$dir2.$val2.'/';
 			$f_alt= '[DIR]';
 		}
 		else
@@ -202,13 +202,16 @@ else
 		echo '<table border="0" cellspacing="0" cellpadding="0"><tr><td width="500"><tt>'.$header.'</tt></td></tr></table><br />';
 	}
 	echo $file_list.'<hr />';
-//  <<<<<  LISTER END  <<<<<
+/* end of lister */
 
-//  >>>>>  UPLOADER  >>>>>
+/* start of uploader */
 	if (file_exists($dir1.'@UPLOAD'))
 	{
 		$up_size2 = file_get_contents($dir1.'@UPLOAD');
-		if ($up_size2 != '') { $up_size = $up_size2; }
+		if ($up_size2 != '')
+		{
+			$up_size = $up_size2;
+		}
 
 		$upload_dir = $wdir.'/'.$dir1;
 		$upload_url = 'http://'.$_SERVER['HTTP_HOST'].$dir1;
@@ -220,7 +223,7 @@ else
 			$result    = $_FILES['userfile']['error'];
 
 			$file_name2 = explode('.', $file_name);
-			$file_ext = strtoupper($file_name2[(count($file_name2)-1)]);
+			$file_ext = strtoupper($file_name2[(count($file_name2) - 1)]);
 
 			if (file_exists($upload_dir.$file_name))
 			{
@@ -267,17 +270,15 @@ else
 			<input type="submit" name="upload" value="Upload" /></form><hr />';
 
 	}
-//  <<<<<  UPLOADER END  <<<<<
-
+/* end of uploader */
 }
-//  <<<<< LISTER & UPLOADER END  <<<<<
 
-//  >>>>>  FOOTER  >>>>>
+/* start of footer */
 echo '</div><address>phpFB '.$phpfb_ver.'</address></body></html>';
 
 if ($message)
 {
 	echo '<script language="JavaScript">window.alert("'.$message.'");</script>';
 }
-//  <<<<<  FOOTER END  <<<<<
+/* end of footer */
 ?>
