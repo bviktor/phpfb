@@ -48,7 +48,8 @@ $messages = array(
 	"perm_error" => "You are not allowed to browse the selected directory."
 );
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>';
+/* set doctype of output */
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">';
 
 $dir2 = str_replace(" ", "%20", $dir1);
 
@@ -62,10 +63,13 @@ while ($back2 > $i)
 	$i++;
 }
 
+/* display header file if it exists */
 if (file_exists($dir1.'@HEADER'))
 {
 	$header = file_get_contents($dir1.'@HEADER');
 }
+
+/* if folder is set to private, return to parent folder */
 if (file_exists($dir1.'@PRIVATE') or strpos($dir1, '..') > -1)
 {
 	echo '<head><meta http-equiv="refresh" content="0,url=lister.php?priv=1&dir='.$back3.'/"></head></html>';
@@ -89,13 +93,13 @@ if ($_GET[view] == 1)
 	$res_h = $reso[1];
 
 	echo '<head><title>'.$picname1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
-	<img alt="back" src="'.$gfxdir.'/back.png" border=0><a href="lister.php?dir='.$pic_back.'">Back</a><p>
-	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br>
-	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br>
-	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br>
-	<hr width='.($reso[0]+2).' align=left>
-	<img alt="image" src="'.$img2.'" width='.$res_w.' height='.$res_h.' border=1>
-	<hr width='.($reso[0]+2).' align=left>';
+	<img alt="back" src="'.$gfxdir.'/back.png" border="0"><a href="lister.php?dir='.$pic_back.'">Back</a><p>
+	<b>Filename: </b><a href="'.$img2.'">'.$picname1.'</a><br />
+	<b>Filesize: </b>'.number_format(filesize($img1)/1024, 0).' kBytes<br />
+	<b>Resolution: </b>'.$res_w.' x '.$res_h.' pixels<br />
+	<hr width="'.($reso[0]+2).'" align="left">
+	<img alt="image" src="'.$img2.'" width="'.$res_w.'" height="'.$res_h.'" border="1">
+	<hr width="'.($reso[0]+2).'" align="left">';
 } 
 //  <<<<<  VIEWER END  <<<<<
 
@@ -187,16 +191,16 @@ else
 
 	echo '<head><title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
 		<h1>Index of <a href="lister.php?dir='.$dir2.'" style="text-decoration: none;"><font color="#000000">/'.$dir1.'</font></a></h1>
-		<table border=0 cellspacing=0 cellpadding=0><tr>
-		<td width=500><tt><img alt="spacer" src="'.$gfxdir.'/blank.png"> Name</tt></td>
-		<td width=180 align=right><tt>Last Modified</tt></td>
-		<td width=110 align=right><tt>Size</tt></td>
-		</tr></table><hr>';
+		<table border="0" cellspacing="0" cellpadding="0"><tr>
+		<td width="500"><tt><img alt="spacer" src="'.$gfxdir.'/blank.png"> Name</tt></td>
+		<td width="180" align="right"><tt>Last Modified</tt></td>
+		<td width="110" align="right"><tt>Size</tt></td>
+		</tr></table><hr />';
 	if ($header)
 	{
-		echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=500><tt>'.$header.'</tt></td></tr></table><br>';
+		echo '<table border="0" cellspacing="0" cellpadding="0"><tr><td width="500"><tt>'.$header.'</tt></td></tr></table><br />';
 	}
-	echo $file_list.'<hr>';
+	echo $file_list.'<hr />';
 //  <<<<<  LISTER END  <<<<<
 
 //  >>>>>  UPLOADER  >>>>>
