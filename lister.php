@@ -78,6 +78,51 @@ if ($_GET[priv] == 1)
 }
 /* end of bootstrap */
 
+/* start of functions */
+function do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled)
+{
+	$temp_name = $_FILES['userfile']['tmp_name'];
+	$file_name = $_FILES['userfile']['name']; 
+	$result    = $_FILES['userfile']['error'];
+
+	$file_name2 = explode('.', $file_name);
+	$file_ext = strtoupper($file_name2[(count($file_name2) - 1)]);
+
+	if (file_exists($upload_dir.$file_name))
+	{
+		$message = 'The file already exists!';
+		return $message;
+	}
+	if ($_FILES['userfile']['size'] > $up_size)
+	{
+		$message = 'The file is too big!';
+		return $message;
+	}
+	if ($file_ext == 'MP3' or $file_ext == 'WMA')
+	{
+		$message = $file_ext.' upload is disabled.';
+		return $message;
+	}
+
+	if ($chmod_enabled == '1')
+	{
+		chmod($temp_name, 0644);
+	}
+
+	if ($file_ext == 'PHP')
+	{
+		$result = move_uploaded_file($temp_name, $upload_dir.$file_name.'s');
+	}
+	else
+	{
+		$result = move_uploaded_file($temp_name, $upload_dir.$file_name);
+	}
+
+	$message = ($result)?'Success! Click on the folder name to see your file!' : 'Upload failed!';
+	return $message;
+}
+/* end of functions */
+
 /* start of viewer */
 if ($_GET[view] == 1)
 {
@@ -229,49 +274,6 @@ else
 
 		$upload_dir = $wdir.'/'.$dir1;
 		$upload_url = 'http://'.$_SERVER['HTTP_HOST'].$dir1;
-
-		function do_upload($upload_dir, $upload_url, $up_size, $chmod_enabled)
-		{
-			$temp_name = $_FILES['userfile']['tmp_name'];
-			$file_name = $_FILES['userfile']['name']; 
-			$result    = $_FILES['userfile']['error'];
-
-			$file_name2 = explode('.', $file_name);
-			$file_ext = strtoupper($file_name2[(count($file_name2) - 1)]);
-
-			if (file_exists($upload_dir.$file_name))
-			{
-				$message = 'The file already exists!';
-				return $message;
-			}
-			if ($_FILES['userfile']['size'] > $up_size)
-			{
-				$message = 'The file is too big!';
-				return $message;
-			}
-			if ($file_ext == 'MP3' or $file_ext == 'WMA')
-			{
-				$message = $file_ext.' upload is disabled.';
-				return $message;
-			}
-
-			if ($chmod_enabled == '1')
-			{
-				chmod($temp_name, 0644);
-			}
-
-			if ($file_ext == 'PHP')
-			{
-				$result = move_uploaded_file($temp_name, $upload_dir.$file_name.'s');
-			}
-			else
-			{
-				$result = move_uploaded_file($temp_name, $upload_dir.$file_name);
-			}
-
-			$message = ($result)?'Success! Click on the folder name to see your file!' : 'Upload failed!';
-			return $message;
-		}
 
 		if ($_FILES['userfile'])
 		{
