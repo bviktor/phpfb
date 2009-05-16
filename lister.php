@@ -95,11 +95,11 @@ if ($_GET[view] == 1)
 	$size_str = (string)number_format(filesize($img1)/1024, 0);
 	if ($size_str > 1)
 	{
-		$size_str = $size_str." kBytes";
+		$size_str .= " kBytes";
 	}
 	else
 	{
-		$size_str = $size_str." kByte";
+		$size_str .= " kByte";
 	}
 
 	/* output the result */
@@ -203,7 +203,8 @@ else
 			</tr></table>';
 	}
 
-	echo '<head><title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
+	echo '<head><meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+		<title>Index of /'.$dir1.'</title></head><body link="#0000cc" alink="#0000cc" vlink="#0000cc">
 		<h1>Index of <a href="lister.php?dir='.$dir2.'" style="text-decoration: none;"><font color="#000000">/'.$dir1.'</font></a></h1>
 		<div><table border="0" cellspacing="0" cellpadding="0"><tr>
 		<td width="500"><tt><img alt="spacer" src="'.$gfxdir.'/blank.png" /> Name</tt></td>
